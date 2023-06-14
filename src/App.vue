@@ -22,7 +22,6 @@ export default {
       this.currentNumber = this.currentNumber.concat(number);
       this.render = this.render.concat(number);
       this.lastPressed = number;
-      console.log(this.lastPressed);
     },
 
     perfomOperation(){
@@ -54,24 +53,25 @@ export default {
 
     decide(op){
       if (!'+-/*'.includes(this.lastPressed)){
-        if (this.operator != ''){
+        if (this.operator != null){
+            this.perfomOperation();
+            this.render = this.currentNumber;
+            console.log(this.currentNumber);
+          }
           this.render = this.render.concat(op);
           this.firstOperand = Number(this.currentNumber);
           this.currentNumber = '';
           this.waitingForSecondOperand = true;
-          } else {
-            this.perfomOperation();
-          }
       }
       this.lastPressed = op;
       this.operator = op ;
     },
     cancel(){
       this.render = '';
-      this.firstOperand = '';
-      this.secondOperand = '';
+      this.firstOperand = null;
+      this.secondOperand = null;
       this.isAnswered = false;
-      this.operator = '';
+      this.operator = null;
     }
   }
   
@@ -115,6 +115,7 @@ export default {
   position:relative;
   text-align:right;
   vertical-align: bottom;
+  font-size: 50px;
 
 }
 .buffer{
