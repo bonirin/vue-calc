@@ -10,61 +10,70 @@ export default {
       secondOperand: null,
       waitingForSecondOperand: false,
       render: '',
+      answer: null,
       isAnswered: false,
     };
   },
   methods: {
     appendNumber(number) {
-      if (this.isAnswered){
-        this.render = ''
-        this.isAnswered = false;
-      }
       this.currentNumber = this.currentNumber.concat(number);
       this.render = this.render.concat(number);
       this.lastPressed = number;
+      this.isAnswered = false;
     },
 
     perfomOperation(){
-      this.secondOperand = this.currentNumber;
-      console.log(this.secondOperand);
-      if (this.operator != ''){
+      this.answer = '';
+      this.secondOperand = Number(this.currentNumber);
+      if (this.operator != null){
+        console.log(this.operator)
+        console.log(this.firstOperand)
+        console.log(this.secondOperand)
         this.render = '';
         switch (this.operator) {
             case '-':
-              this.currentNumber = String(this.firstOperand - Number(this.secondOperand));
+              this.answer = this.firstOperand - this.secondOperand;
               break;
             case '+':
-              this.currentNumber = String(this.firstOperand + Number(this.secondOperand));
+              this.answer = this.firstOperand + this.secondOperand;
               break;
             case '*':
-              this.currentNumber = String(this.firstOperand * Number(this.secondOperand));
+              this.answer = this.firstOperand * this.secondOperand;
               break;
             case '/':
-              this.currentNumber = String(this.firstOperand / Number(this.secondOperand));
+              this.answer = this.firstOperand / this.secondOperand;
               break;
         }}
-      this.render = this.currentNumber;
-      this.isAnswered = true;
-      this.operator = null;
-      this.firstOperand = null;
+      console.log(this.answer)
+      this.render = String(this.answer);
+      this.firstOperand = this.answer
       this.secondOperand = null;
-      this.currentNumber = '';
+      this.isAnswered = true
     },
 
     decide(op){
-      if (!'+-/*'.includes(this.lastPressed)){
-        if (this.operator != null){
-            this.perfomOperation();
-            this.render = this.currentNumber;
-            console.log(this.currentNumber);
-          }
-          this.render = this.render.concat(op);
-          this.firstOperand = Number(this.currentNumber);
-          this.currentNumber = '';
-          this.waitingForSecondOperand = true;
+      if (('+-/*'.includes(this.lastPressed)) && this.operator != null){
+        this.render = this.render.slice(0,-1);
+      }
+      if ((!'+-/*'.includes(this.lastPressed)) && (this.operator != null) && (!this.isAnswered)){
+        this.perfomOperation()
+      }
+      if (this.isAnswered){
+        this.firstOperand = this.answer
+      } else {
+        this.firstOperand = Number(this.currentNumber)
       }
       this.lastPressed = op;
-      this.operator = op ;
+      this.operator = op;
+      this.render = this.render.concat(op);
+      // if (this.operator != null){
+      //     this.perfomOperation();
+      //     this.render = this.currentNumber;
+      // }
+      // this.render = this.render.concat(op);
+      this.currentNumber = '';
+      // console.log(this.firstOperand);
+      // this.waitingForSecondOperand = true;
     },
     cancel(){
       this.render = '';
@@ -72,6 +81,8 @@ export default {
       this.secondOperand = null;
       this.isAnswered = false;
       this.operator = null;
+      this.currentNumber = '';
+      this.lastPressed = '';
     }
   }
   
@@ -84,22 +95,22 @@ export default {
   <div class="calc">
     <div class="answer">{{ render }}</div>
     <div class="numpad">
-        <button class="number" v-on:click="appendNumber('7')" >7</button>
-        <button class="number" v-on:click="appendNumber('8')">8</button>
-        <button class="number" v-on:click="appendNumber('9')">9</button>
-        <button class="number" v-on:click="decide('*')">*</button>
-        <button class="number" v-on:click="appendNumber('4')" >4</button>
-        <button class="number" v-on:click="appendNumber('5')" >5</button>
-        <button class="number" v-on:click="appendNumber('6')" >6</button>
-        <button class="number" v-on:click="decide('/')">/</button>
-        <button class="number" v-on:click="appendNumber('1')" >1</button>
-        <button class="number" v-on:click="appendNumber('2')" >2</button>
-        <button class="number" v-on:click="appendNumber('3')" >3</button>
-        <button class="number" v-on:click="decide('-')">-</button>
-        <button class="number" v-on:click="cancel()">c</button>
-        <button class="number" v-on:click="appendNumber('0')" >0</button>
-        <button class="number" v-on:click="perfomOperation()">=</button>
-        <button class="number" v-on:click="decide('+')">+</button>
+        <button v-on:click="appendNumber('7')" >7</button>
+        <button v-on:click="appendNumber('8')">8</button>
+        <button v-on:click="appendNumber('9')">9</button>
+        <button v-on:click="decide('*')">*</button>
+        <button v-on:click="appendNumber('4')" >4</button>
+        <button v-on:click="appendNumber('5')" >5</button>
+        <button v-on:click="appendNumber('6')" >6</button>
+        <button v-on:click="decide('/')">/</button>
+        <button v-on:click="appendNumber('1')" >1</button>
+        <button v-on:click="appendNumber('2')" >2</button>
+        <button v-on:click="appendNumber('3')" >3</button>
+        <button v-on:click="decide('-')">-</button>
+        <button v-on:click="cancel()">c</button>
+        <button v-on:click="appendNumber('0')" >0</button>
+        <button v-on:click="perfomOperation()">=</button>
+        <button v-on:click="decide('+')">+</button>
     </div>
 </div>
 
@@ -107,7 +118,6 @@ export default {
 
 <style>
 .answer{
-  width:400px;
   height:100px;
   background-color:bisque;
   color:black;
@@ -119,27 +129,18 @@ export default {
 
 }
 .buffer{
- width:100px;
  background-color: rgb(174, 174, 174);
  display: inline-block;
 }
-.number{
- width: 100px;
- height: 100px; 
- background-color: aliceblue;
- color:black;
- position: relative;
- display: inline-block;
-
-}
 .calc{
   width:400px;
+  height: 500px;
 }
 .numpad{
-  display: block;
-  background-color: grey;
   height: 400px;
-  width:400px;
-  align-items: stretch;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr 1fr;
+  background-color: grey;
 }
 </style>
