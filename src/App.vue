@@ -16,11 +16,8 @@ export default {
   methods: {
     appendNumber(number) {
       if (this.isAnswered){
-        this.render = '';
-        this.firstOperand = '';
-        this.secondOperand = '';
+        this.render = ''
         this.isAnswered = false;
-        this.operator = '';
       }
       this.currentNumber = this.currentNumber.concat(number);
       this.render = this.render.concat(number);
@@ -32,23 +29,27 @@ export default {
       this.secondOperand = this.currentNumber;
       console.log(this.secondOperand);
       if (this.operator != ''){
-      this.render = '';
-      switch (this.operator) {
-          case '-':
-            this.render = String(this.firstOperand - Number(this.secondOperand));
-            break;
-          case '+':
-            this.render = String(this.firstOperand + Number(this.secondOperand));
-            break;
-          case '*':
-            this.render = String(this.firstOperand * Number(this.secondOperand));
-            break;
-          case '/':
-            this.render = String(this.firstOperand / Number(this.secondOperand));
-            break;
-      }}
+        this.render = '';
+        switch (this.operator) {
+            case '-':
+              this.currentNumber = String(this.firstOperand - Number(this.secondOperand));
+              break;
+            case '+':
+              this.currentNumber = String(this.firstOperand + Number(this.secondOperand));
+              break;
+            case '*':
+              this.currentNumber = String(this.firstOperand * Number(this.secondOperand));
+              break;
+            case '/':
+              this.currentNumber = String(this.firstOperand / Number(this.secondOperand));
+              break;
+        }}
+      this.render = this.currentNumber;
       this.isAnswered = true;
-      this.operator = '';
+      this.operator = null;
+      this.firstOperand = null;
+      this.secondOperand = null;
+      this.currentNumber = '';
     },
 
     decide(op){
