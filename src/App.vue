@@ -7,12 +7,21 @@ export default {
       currentNumber: '',
       operator: null,
       firstOperand: null,
+      secondOperand: null,
       waitingForSecondOperand: false,
       render: '',
+      isAnswered: false,
     };
   },
   methods: {
     appendNumber(number) {
+      if (this.isAnswered){
+        this.render = '';
+        this.firstOperand = '';
+        this.secondOperand = '';
+        this.isAnswered = false;
+        this.operator = '';
+      }
       this.currentNumber = this.currentNumber.concat(number);
       this.render = this.render.concat(number);
       this.lastPressed = number;
@@ -20,20 +29,49 @@ export default {
     },
 
     perfomOperation(){
-      console.log('lol');
+      this.secondOperand = this.currentNumber;
+      console.log(this.secondOperand);
+      if (this.operator != ''){
+      this.render = '';
+      switch (this.operator) {
+          case '-':
+            this.render = String(this.firstOperand - Number(this.secondOperand));
+            break;
+          case '+':
+            this.render = String(this.firstOperand + Number(this.secondOperand));
+            break;
+          case '*':
+            this.render = String(this.firstOperand * Number(this.secondOperand));
+            break;
+          case '/':
+            this.render = String(this.firstOperand / Number(this.secondOperand));
+            break;
+      }}
+      this.isAnswered = true;
+      this.operator = '';
     },
 
     decide(op){
-      if (this.lastPressed != op){
-        this.render = this.render.concat(op);
-        this.firstOperand = Number(this.currentNumber);
-        console.log(this.currentNumber);
-        this.currentNumber = '';
-        console.log(this.currentNumber);
+      if (!'+-/*'.includes(this.lastPressed)){
+        if (this.operator != ''){
+          this.render = this.render.concat(op);
+          this.firstOperand = Number(this.currentNumber);
+          this.currentNumber = '';
+          this.waitingForSecondOperand = true;
+          } else {
+            this.perfomOperation();
+          }
       }
       this.lastPressed = op;
-      console.log(this.lastPressed);
+      this.operator = op ;
     },
+    cancel(){
+      this.render = '';
+      this.firstOperand = '';
+      this.secondOperand = '';
+      this.isAnswered = false;
+      this.operator = '';
+    }
   }
   
 }
@@ -57,7 +95,7 @@ export default {
         <button class="number" v-on:click="appendNumber('2')" >2</button>
         <button class="number" v-on:click="appendNumber('3')" >3</button>
         <button class="number" v-on:click="decide('-')">-</button>
-        <button class="number">c</button>
+        <button class="number" v-on:click="cancel()">c</button>
         <button class="number" v-on:click="appendNumber('0')" >0</button>
         <button class="number" v-on:click="perfomOperation()">=</button>
         <button class="number" v-on:click="decide('+')">+</button>
