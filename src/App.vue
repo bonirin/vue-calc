@@ -16,8 +16,8 @@ export default {
   },
   methods: {
     appendNumber(number) {
-      this.currentNumber = this.currentNumber.concat(number);
-      this.render = this.render.concat(number);
+      this.currentNumber = `${this.currentNumber}${number}`;
+      this.render = `${this.render}${number}`;
       this.lastPressed = number;
       this.isAnswered = false;
     },
@@ -64,7 +64,7 @@ export default {
       }
       this.lastPressed = op;
       this.operator = op;
-      this.render = this.render.concat(op);
+      this.render = `${this.render}${op}`;
       this.currentNumber = '';
     },
     cancel(){
@@ -108,7 +108,7 @@ export default {
 
 </template>
 
-<style>
+<style scoped>
 .answer{
   height:100px;
   background-color:bisque;
