@@ -26,9 +26,6 @@ export default {
       this.answer = '';
       this.secondOperand = Number(this.currentNumber);
       if (this.operator != null){
-        console.log(this.operator)
-        console.log(this.firstOperand)
-        console.log(this.secondOperand)
         this.render = '';
         switch (this.operator) {
             case '-':
@@ -44,7 +41,9 @@ export default {
               this.answer = this.firstOperand / this.secondOperand;
               break;
         }}
-      console.log(this.answer)
+      if (!Number.isInteger(this.answer)){
+        this.answer = Math.floor(this.answer * 100) / 100
+      }
       this.render = String(this.answer);
       this.firstOperand = this.answer
       this.secondOperand = null;
@@ -66,14 +65,7 @@ export default {
       this.lastPressed = op;
       this.operator = op;
       this.render = this.render.concat(op);
-      // if (this.operator != null){
-      //     this.perfomOperation();
-      //     this.render = this.currentNumber;
-      // }
-      // this.render = this.render.concat(op);
       this.currentNumber = '';
-      // console.log(this.firstOperand);
-      // this.waitingForSecondOperand = true;
     },
     cancel(){
       this.render = '';
